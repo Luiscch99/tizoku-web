@@ -143,9 +143,16 @@
       var q = encodeURIComponent(loc.mapQuery);
       var hours = loc.hours || "Consulta el horario por WhatsApp";
 
+      // Si el horario trae varios rangos separados por "|", cada uno va en su propia línea.
+      var hoursDd = h("dd", {});
+      hours.split("|").forEach(function (part, i) {
+        if (i > 0) hoursDd.appendChild(document.createElement("br"));
+        hoursDd.appendChild(document.createTextNode(part.trim()));
+      });
+
       var dl = h("dl", {}, [
         h("div", {}, [h("dt", { text: "Dirección" }), h("dd", { text: loc.address })]),
-        h("div", {}, [h("dt", { text: "Horario" }), h("dd", { text: hours })]),
+        h("div", {}, [h("dt", { text: "Horario" }), hoursDd]),
         h("div", {}, [h("dt", { text: "Teléfono" }), h("dd", {}, [h("a", { href: "tel:" + C.phone.tel, text: C.phone.display })])])
       ]);
       var actions = h("div", { "class": "loc-actions" }, [
@@ -205,6 +212,18 @@
     }).observe(heroEl);
   } else if (floatBar) {
     floatBar.classList.add("show");
+  }
+
+  /* ---------- Botón "volver arriba": aparece al bajar un poco ---------- */
+  var toTop = $("#toTop");
+  if (toTop) {
+    var toggleTop = function () { toTop.classList.toggle("show", window.scrollY > 700); };
+    window.addEventListener("scroll", toggleTop, { passive: true });
+    toggleTop();
+    toTop.addEventListener("click", function () {
+      var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: calm ? "auto" : "smooth" });
+    });
   }
 
   /* ---------- Promo del día ---------- */

@@ -259,7 +259,7 @@
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" href="assets/img/logos/icon-192.png" type="image/png">
   <link rel="preload" href="assets/fonts/archivo-cond-900.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/styles.css?v=12">
+  <link rel="stylesheet" href="css/styles.css?v=13">
 </head>
 <body>
 
@@ -284,6 +284,7 @@
       <a href="#promos">Promos</a>
       <a href="#pedir">Pedir</a>
       <a href="#ubicacion">Ubicación</a>
+      <a data-billing href="#" target="_blank" rel="noopener">Facturación</a>
     </nav>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Abrir menú de navegación">
       <span></span><span></span><span></span>
@@ -531,6 +532,11 @@
   </a>
 </div>
 
+<!-- Volver arriba -->
+<button class="to-top" id="toTop" type="button" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
 <!-- Visor de página del menú -->
 <dialog class="lightbox" id="lightbox" aria-label="Página del menú ampliada">
   <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
@@ -538,6 +544,6 @@
 </dialog>
 
 <script src="js/config.js?v=4"></script>
-<script src="js/main.js?v=10"></script>
+<script src="js/main.js?v=12"></script>
 </body>
 </html>
