@@ -73,7 +73,7 @@ window.TIZOKU = {
       tag: "Dentro de Playa Bichis",
       address: "Blvd. Manuel Gómez Morín 8125, Col. Partido Senecú, Cd. Juárez, Chih.",
       // Texto que se muestra en la tarjeta. null = "Consulta el horario por WhatsApp".
-      hours: "Lunes a domingo · 12:00 pm a 10:00 pm",
+      hours: "Dom a jue · 1:00 pm a 9:30 pm | Vie y sáb · 1:00 pm a 10:30 pm",
       mapQuery: "Playa Bichis Gómez Morín, Blvd. Manuel Gómez Morín 8125, Ciudad Juárez, Chihuahua",
     },
     {
