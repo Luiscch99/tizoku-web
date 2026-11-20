@@ -362,7 +362,8 @@ h1, h2, h3, p { margin: 0; }
 .combo-line b { color: var(--watermelon); padding-inline: .15em; }
 .combo-line strong { font-weight: 900; font-family: "Archivo Semi", "Arial", sans-serif; text-transform: uppercase; }
 .combo-art { position: relative; padding: 0 10px 28px 0; }
-.photo--combo { border-color: var(--floral); transform: rotate(-2deg); box-shadow: 10px 10px 0 var(--watermelon); aspect-ratio: 5 / 4; }
+/* Charola recortada (sin fondo): la sombra dura sigue la silueta */
+.combo-tray { display: block; width: 100%; max-width: 560px; height: auto; margin-inline: auto; transform: rotate(-3deg); filter: drop-shadow(10px 10px 0 var(--watermelon)); }
 .burst--combo { position: absolute; right: -6px; bottom: -6px; width: 138px; --bg: var(--watermelon); --fg: var(--black); transform: rotate(8deg); }
 .burst--combo b { font-size: 2.4rem; }
 @media (min-width: 900px) { .combo-grid { grid-template-columns: 1fr 1fr; gap: 64px; } .burst--combo { width: 160px; } }
