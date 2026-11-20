@@ -173,12 +173,34 @@ h1, h2, h3, p { margin: 0; }
   mask-image: linear-gradient(to bottom, #000 0, transparent 45%);
 }
 .hero-grid { position: relative; z-index: 2; display: grid; gap: 40px; align-items: center; }
-/* Recorte de la modelo, pegado al borde inferior del hero */
-.hero-cutout {
-  position: relative; z-index: 1; display: block;
-  width: min(82%, 380px); height: auto; margin: 8px 0 0 auto;
-  filter: drop-shadow(6px 6px 0 var(--black));
+/* Mazo de polaroids: la de al frente es grande; al avanzar, sale volando y pasa al fondo.
+   El JS (main.js) pone data-p="0..3" según la posición en el mazo. */
+.hero-polaroids {
+  position: absolute; z-index: 1; right: max(2%, calc((100% - 1160px) / 2)); top: 50%;
+  width: clamp(300px, 34vw, 470px); aspect-ratio: 1 / 1.16; transform: translateY(-50%);
+  cursor: pointer; touch-action: pan-y; -webkit-tap-highlight-color: transparent; user-select: none;
 }
+.pol {
+  position: absolute; left: 7%; top: 3%; width: 86%; height: auto; display: block;
+  border: var(--line) solid var(--black); box-shadow: 6px 6px 0 var(--black);
+  background: var(--floral); -webkit-user-drag: none;
+  transition: transform .65s cubic-bezier(.2, .8, .2, 1), opacity .4s ease; will-change: transform;
+}
+.pol[data-p="0"] { transform: rotate(-3deg); z-index: 4; }
+.pol[data-p="1"] { transform: translate(5%, -1%) rotate(4deg); z-index: 3; }
+.pol[data-p="2"] { transform: translate(-4%, 2%) rotate(-7deg); z-index: 2; }
+.pol[data-p="3"] { transform: translate(3%, 3%) rotate(8deg); z-index: 1; }
+.pol.is-out { transform: translate(78%, -10%) rotate(20deg); opacity: 0; z-index: 5; }
+.pol.no-trans { transition: none; }
+/* Puntitos para elegir foto (la zona de toque es más grande que el punto) */
+.pol-dots { position: absolute; z-index: 6; left: 0; right: 0; bottom: -36px; display: flex; justify-content: center; gap: 14px; }
+.pol-dots button {
+  position: relative; width: 16px; height: 16px; padding: 0; cursor: pointer;
+  background: var(--floral); border: var(--line) solid var(--black); border-radius: 50%;
+}
+.pol-dots button::after { content: ""; position: absolute; inset: -10px; }
+.pol-dots button[aria-current="true"] { background: var(--black); }
+.pol-dots button:focus-visible { outline: 3px solid var(--azure); outline-offset: 3px; }
 .hero-title {
   display: grid; font-weight: 900; font-family: "Archivo Cond", "Arial Narrow", sans-serif; text-transform: uppercase;
   font-size: clamp(3.4rem, 17vw, 7rem); line-height: .9; letter-spacing: -.01em;
@@ -243,11 +265,13 @@ h1, h2, h3, p { margin: 0; }
   .hero-link .ico { display: none; }
   .hero-copy { padding-bottom: 14px; }
   .ticker-track { padding: 8px 0; }
-  /* Modelo: sube por la columna derecha, a la altura de ROLLO. / ES UN / TIZOKU */
-  .hero-cutout { position: absolute; right: 6px; top: calc(36px + 25.2vw); bottom: auto; width: 42vw; max-width: 190px; margin: 0; }
+  /* Celular: el mazo va en la columna derecha, junto al titular */
+  .hero-polaroids { right: 6px; top: calc(36px + 5vw); width: 50vw; max-width: 230px; transform: none; }
+  .pol { box-shadow: 4px 4px 0 var(--black); }
+  .pol-dots { bottom: -30px; }
   /* Sello de la promo del día: arriba a la derecha, junto a "NO ES" */
   /* Sobre el pecho de la modelo (lejos del titular, aunque el teléfono muestre letras más anchas) */
-  .burst--hero { display: grid; right: 6px; top: calc(36px + 44vw); bottom: auto; width: min(22vw, 96px); }
+  .burst--hero { display: grid; right: -2px; top: 22px; bottom: auto; width: min(22vw, 96px); z-index: 7; }
   .burst--hero b { font-size: clamp(1.3rem, 6.4vw, 1.9rem); }
   .burst--hero small { font-size: .56rem; }
 }
@@ -261,7 +285,6 @@ h1, h2, h3, p { margin: 0; }
   .hero { padding: 56px 0 84px; min-height: min(86vh, 760px); display: grid; align-items: center; }
   .hero-grid { max-width: 620px; margin-inline: 0 auto; }
   .hero .wrap { margin-left: max(16px, calc((100% - 1160px) / 2)); }
-  .hero-cutout { position: absolute; right: max(2%, calc((100% - 1160px) / 2)); bottom: 0; width: auto; height: min(92%, 700px); margin: 0; }
   .burst { width: 140px; }
   .burst--hero { top: 6px; bottom: auto; right: auto; left: clamp(360px, 33vw, 470px); width: 140px; } /* relativo a .hero-grid: a la derecha del titular */
 }
@@ -552,5 +575,6 @@ body { padding-bottom: 76px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .ticker-track { animation: none; }
+  .pol { transition: none; }
   .btn, .order { transition: none; }
 }

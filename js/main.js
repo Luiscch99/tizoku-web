@@ -214,6 +214,89 @@
     floatBar.classList.add("show");
   }
 
+  /* ---------- Mazo de polaroids del hero ----------
+     La de al frente (data-p="0") sale volando y pasa al fondo; las demás suben un lugar.
+     Avanza sola cada 3.5 s (se pausa al tocar/pasar el cursor, fuera de pantalla o con la pestaña oculta),
+     y también con clic/toque, deslizando o con los puntitos. Con "movimiento reducido" no avanza sola. */
+  var deck = $("#heroPolaroids");
+  if (deck) {
+    var cards = $all(".pol", deck);
+    var dotsBox = $("#polDots");
+    var order = cards.slice();          // order[0] = la de al frente
+    var busy = false, timer = null, paused = false, visible = true;
+    var calmMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var dots = cards.map(function (card, i) {
+      var b = h("button", { type: "button", "aria-label": "Ver foto " + (i + 1) + " de " + cards.length });
+      b.addEventListener("click", function (e) { e.stopPropagation(); goTo(card); });
+      dotsBox.appendChild(b);
+      return b;
+    });
+
+    function render() {
+      order.forEach(function (card, i) {
+        card.setAttribute("data-p", String(i));
+        card.setAttribute("aria-hidden", i === 0 ? "false" : "true");
+        card.classList.remove("is-out");
+      });
+      dots.forEach(function (b, i) {
+        if (cards[i] === order[0]) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
+      });
+    }
+
+    function next() {
+      if (busy) return;
+      busy = true;
+      var front = order[0];
+      front.classList.add("is-out");                    // sale volando
+      setTimeout(function () {
+        front.classList.add("no-trans");                // se acomoda al fondo sin animar
+        order.push(order.shift());
+        render();
+        void front.offsetWidth;                         // fuerza el reflujo antes de reactivar la animación
+        front.classList.remove("no-trans");
+        busy = false;
+      }, calmMotion ? 0 : 450);
+    }
+
+    function goTo(card) {
+      if (busy || order[0] === card) return;
+      while (order[0] !== card) order.push(order.shift());
+      render();
+      restart();
+    }
+
+    function start() {
+      stop();
+      if (calmMotion || paused || !visible || document.hidden) return;
+      timer = setInterval(next, 3500);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    function restart() { stop(); start(); }
+
+    // Clic o deslizamiento (en cualquier dirección) avanzan a la siguiente
+    var startX = null, startY = null;
+    deck.addEventListener("pointerdown", function (e) { startX = e.clientX; startY = e.clientY; paused = true; stop(); });
+    deck.addEventListener("pointerup", function (e) {
+      if (startX === null) return;
+      var dx = Math.abs(e.clientX - startX), dy = Math.abs(e.clientY - startY);
+      startX = startY = null;
+      if (dx > 28 && dx > dy) next();
+      else if (dx < 8 && dy < 8) next();
+      paused = false; start();
+    });
+    deck.addEventListener("pointercancel", function () { startX = startY = null; paused = false; start(); });
+    deck.addEventListener("mouseenter", function () { paused = true; stop(); });
+    deck.addEventListener("mouseleave", function () { paused = false; start(); });
+    document.addEventListener("visibilitychange", start);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; start(); }).observe(deck);
+    }
+
+    render();
+    start();
+  }
+
   /* ---------- Botón "volver arriba": aparece al bajar un poco ---------- */
   var toTop = $("#toTop");
   if (toTop) {
