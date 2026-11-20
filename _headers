@@ -1,0 +1,14 @@
+# Cabeceras de seguridad para Cloudflare Pages (se aplican a todo el sitio).
+# Cloudflare ya agrega X-Content-Type-Options y Referrer-Policy; no se repiten aquí.
+/*
+  # Obliga a usar HTTPS. Empieza con 1 día; cuando todo esté estable se puede subir a 1 año (31536000).
+  # Sin includeSubDomains ni preload a propósito: solo afecta a sushi.tizoku.com.
+  Strict-Transport-Security: max-age=86400
+  # Nadie puede meter el sitio dentro de otra página (clickjacking).
+  X-Frame-Options: DENY
+  # El sitio no usa cámara, micrófono, ubicación ni pagos.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  # Política de contenido: el sitio solo carga scripts, fuentes e imágenes propias.
+  # - style-src permite estilos en línea (hay un style="" en el HTML).
+  # - frame-src permite únicamente el mapa de Google, que se carga cuando el visitante lo pide.
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; frame-src https://maps.google.com https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'
