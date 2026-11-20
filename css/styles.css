@@ -462,6 +462,9 @@ h1, h2, h3, p { margin: 0; }
 .g1 { transform: rotate(-1.5deg); } .g2 { transform: rotate(1.5deg); } .g3 { transform: rotate(1deg); } .g4 { transform: rotate(-1deg); }
 @media (min-width: 900px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); gap: 26px; } }
 .social-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; justify-content: center; }
+/* Sin fotos arriba: franja compacta solo con las redes */
+.gallery--social { padding: 40px 0 44px; }
+.gallery--social .social-row { margin-top: 0; }
 .pill {
   text-decoration: none; font-weight: 800; font-family: "Archivo Semi", "Arial", sans-serif; text-transform: uppercase; letter-spacing: .04em;
   padding: .55em 1.1em; background: var(--floral); border: var(--line) solid var(--black); border-radius: 999px; box-shadow: 3px 3px 0 var(--black);
