@@ -115,6 +115,38 @@
       chipEls.push(b);
     });
     updateArrows();
+
+    /* Las categorías ruedan solas de ida y vuelta (solo si no caben en pantalla).
+       Se detienen al tocar, deslizar o pasar el cursor, y retoman a los 4 s sin actividad.
+       No ruedan si el menú no se ve, si la pestaña está oculta o con "movimiento reducido". */
+    var calmChips = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!calmChips) {
+      var pos = 0, dir = 1, holdUntil = 0, idleUntil = 0, seen = true, rafId = null, lastT = 0;
+      var SPEED = 22;                                       // píxeles por segundo
+      var pauseChips = function () { idleUntil = performance.now() + 4000; };
+      ["pointerdown", "touchstart", "wheel", "keydown", "focusin"].forEach(function (ev) {
+        chips.addEventListener(ev, pauseChips, { passive: true });
+      });
+      chips.addEventListener("mouseenter", function () { idleUntil = Infinity; });
+      chips.addEventListener("mouseleave", pauseChips);
+      track.addEventListener("scroll", function () { if (performance.now() > idleUntil) return; pos = track.scrollLeft; }, { passive: true });
+
+      var tick = function (t) {
+        rafId = requestAnimationFrame(tick);
+        var dt = Math.min(0.05, (t - (lastT || t)) / 1000);
+        lastT = t;
+        var max = track.scrollWidth - track.clientWidth;
+        if (!seen || document.hidden || max < 8 || t < idleUntil || t < holdUntil) { pos = track.scrollLeft; return; }
+        pos += dir * SPEED * dt;
+        if (pos >= max) { pos = max; dir = -1; holdUntil = t + 1200; }
+        else if (pos <= 0) { pos = 0; dir = 1; holdUntil = t + 1200; }
+        track.scrollLeft = pos;
+      };
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) { seen = entries[0].isIntersecting; }).observe(chips);
+      }
+      rafId = requestAnimationFrame(tick);
+    }
   }
 
   if (box) {

@@ -369,6 +369,15 @@ h1, h2, h3, p { margin: 0; }
 @media (min-width: 900px) { .combo-grid { grid-template-columns: 1fr 1fr; gap: 64px; } .burst--combo { width: 160px; } }
 
 /* ---------- Menú ---------- */
+/* Pista encima de las categorías */
+.chips-hint {
+  margin: 0 0 10px; color: var(--floral);
+  font-family: "Archivo Semi", "Arial", sans-serif; font-weight: 800; font-size: .85rem; letter-spacing: .08em; text-transform: uppercase;
+}
+.chips-hint-arrow { display: inline-block; margin-left: .25em; color: var(--icy); font-size: 1.15em; line-height: 1; animation: hint-bounce 1.3s ease-in-out infinite; }
+@keyframes hint-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .chips-hint-arrow { animation: none; } }
+@media (min-width: 860px) { .chips-hint { text-align: center; } }
 .menu-chips {
   position: sticky; top: 68px; z-index: 20;
   margin: 0 -16px 26px;
